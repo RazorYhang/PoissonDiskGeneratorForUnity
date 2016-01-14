@@ -28,7 +28,7 @@ public sealed class PoissonDiskGenerator : Object {
 	/// </summary>
 	/// <returns><c>true</c> if is inputs valid; otherwise, <c>false</c>.</returns>
 	private static bool IsInputsValid(){
-		return (minDist <= 0) && (k <= 0) && (sampleRange <= minDist);
+		return (minDist > 0.0f) && (k > 0) && (sampleRange > minDist);
 	}
 	/// <summary>
 	/// Generate samples. Based on minDist / k / sampleRange.
