@@ -11,5 +11,5 @@ To use:</p><p>
 For Poisson Disc and Supersampling, please take a look at:</p><p>
 https://en.wikipedia.org/wiki/Supersampling#Poisson_disc</p>  <p>&nbsp;
 
-About the algorithm in this script follows:</p><p>
+The algorithm in this script follows:</p><p>
 "Fast Poisson Disk Sampling in Arbitrary Dimensions. Robert Bridson. ACM SIGGRAPH 2007"
