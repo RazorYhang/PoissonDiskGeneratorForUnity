@@ -13,3 +13,9 @@ https://en.wikipedia.org/wiki/Supersampling#Poisson_disc</p>  <p>&nbsp;
 
 The algorithm in this script follows:</p><p>
 "Fast Poisson Disk Sampling in Arbitrary Dimensions. Robert Bridson. ACM SIGGRAPH 2007"
+
+# TODO:</p><p>
+
+1. Darting position could be optimized based on grid occupation condition.
+2. the "List<vector2> resultList" is some how unnecessary.
+3. Make the edge of the samples tiled.
