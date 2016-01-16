@@ -1,7 +1,7 @@
 # PoissonDiskGeneratorForUnity
 A Possion Disk sample generator for Unity3D
 
-This Unity3D C# script generates poisson dic samples for general purpose.</p>  <p>&nbsp;
+This Unity3D C# script generates poisson disc samples for general purpose.</p>  <p>&nbsp;
 
 To use:</p><p>
 1. set parameters. ( minDist / k / sampleRange ) </p><p>
