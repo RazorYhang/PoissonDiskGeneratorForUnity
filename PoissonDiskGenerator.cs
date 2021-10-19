@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -19,6 +19,7 @@ public sealed class PoissonDiskGenerator : Object {
 	private static List<Vector2> resultSet;
 	// grid for save sample locations.
 	private static bool[,] grid;
+	private static float[,] gridvalueX, gridvalueY;
 	private static float m_CeiledSampleRange;
 	private static float gridCellSize = 0.0f;
 	private static int gridLength = 0;
@@ -50,6 +51,8 @@ public sealed class PoissonDiskGenerator : Object {
 		gridLength = Mathf.CeilToInt (sampleRange / gridCellSize);
 		m_CeiledSampleRange = gridLength * gridCellSize;
 		grid = new bool[gridLength,gridLength];
+		gridvalueX = new float[gridLength, gridLength];
+		gridvalueY = new float[gridLength, gridLength];
 
 		// Create processing list.
 		float[] activePointListX = new float[ gridLength * gridLength ];	// x 
@@ -59,6 +62,8 @@ public sealed class PoissonDiskGenerator : Object {
 		activePointListX [0] = Random.Range (0.0f, m_CeiledSampleRange);
 		activePointListY [0] = Random.Range (0.0f, m_CeiledSampleRange);
 		grid [_PositionToGridIndex (activePointListX [0]), _PositionToGridIndex (activePointListY [0])] = true;
+		gridvalueX[_PositionToGridIndex(activePointListX[0]), _PositionToGridIndex(activePointListY[0])] =activePointListX[0];
+		gridvalueY[_PositionToGridIndex(activePointListX[0]), _PositionToGridIndex(activePointListY[0])] = activePointListY[0];
 
 		// throw darts
 		float dartX = 0.0f, dartY = 0.0f;
@@ -73,17 +78,41 @@ public sealed class PoissonDiskGenerator : Object {
 			for(int dart = 0; dart < k; ++dart ){
 				// randomly chose a dart in the ring area.
 				dartRadians = Random.Range(0,Mathf.PI + Mathf.PI);
-				dartDist = Random.Range(minDist, minDist + minDist);// range from minDist to 2*minDist ( r to 2r in cf paper )
+				dartDist = Random.Range(minDist, 2.0f*minDist);// range from minDist to 2*minDist ( r to 2r in cf paper )
 				dartX = activePointListX [proc] + dartDist * Mathf.Cos(dartRadians);
 				dartY = activePointListY [proc] + dartDist * Mathf.Sin(dartRadians);
 				gridX = _PositionToGridIndex(dartX);
 				gridY = _PositionToGridIndex(dartY);
 
 				// find out if there is samples near this dart.
+
+				bool isdebug = true;
+
+				if (isdebug&((_WrapRepeatFloat(dartX) - dartX )!= 0.0f | (_WrapRepeatFloat(dartY) - dartY )!= 0.0f))
+                {
+					continue;
+				}
+
 				bool hasSamples = false;
-				for(int x = -1; x <= 1; ++x){
-					for(int y = -1; y <= 1; ++y){
-						hasSamples |= grid[_WrapIndex(gridX + x), _WrapIndex(gridY + y)];
+				for (int x = -2; x <= 2; ++x){
+					for(int y = -2; y <= 2; ++y){
+
+						
+						if(isdebug)
+                        {
+							float xx = gridvalueX[_WrapIndex(gridX + x), _WrapIndex(gridY + y)];
+							float yy = gridvalueY[_WrapIndex(gridX + x), _WrapIndex(gridY + y)];
+
+							if (grid[_WrapIndex(gridX + x), _WrapIndex(gridY + y)])
+							{
+								hasSamples |= ((xx - dartX) * (xx - dartX) + (yy - dartY) * (yy - dartY)) < (minDist * minDist);
+							}
+						}
+						else
+						{
+							hasSamples |= grid[_WrapIndex(gridX + x), _WrapIndex(gridY + y)];
+						}
+						//
 					}
 				}
 
@@ -95,8 +124,13 @@ public sealed class PoissonDiskGenerator : Object {
 					// no sample around, add this dart sample into processing list.
 					++activePointCount;
 					grid[gridX,gridY] = true;
+
+					gridvalueX[gridX, gridY] = _WrapRepeatFloat(dartX);
+					gridvalueY[gridX, gridY] = _WrapRepeatFloat(dartY);
+
 					activePointListX[activePointCount] = _WrapRepeatFloat(dartX);
 					activePointListY[activePointCount] = _WrapRepeatFloat(dartY);
+
 				}
 			}
 		}
