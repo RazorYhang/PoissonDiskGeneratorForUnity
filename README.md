@@ -1,3 +1,17 @@
+# Fixed a bug by hex:
+org bug:
+
+<img src=https://user-images.githubusercontent.com/24391739/137856440-75368ed8-07f2-4947-ba70-2c9930394463.png width=500px >
+
+the circles are overlap each other and seems sparse
+
+fixed version:
+
+<img src=https://user-images.githubusercontent.com/24391739/137857089-2312c04d-630e-49b1-86fb-ce6c7011150b.png width=500px>
+
+much better
+
+
 # PoissonDiskGeneratorForUnity
 A Possion Disk sample generator for Unity3D
 
